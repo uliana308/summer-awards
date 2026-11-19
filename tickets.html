@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Билеты — SUMMERAWARDS 2027</title>
+  <meta name="description" content="Билеты на SUMMERAWARDS 2027: схема Solar Arena, выбор мест и мои заказы.">
   <link rel="stylesheet" href="css/common.css">
   <link rel="stylesheet" href="css/tickets.css">
 </head>
@@ -16,12 +17,153 @@
 
   <main class="page" id="tickets">
 
-    <!-- ЗАГОТОВКА. Ветка: feature/tickets. Замените этот блок своей страницей. -->
-    <section class="stub">
-      <span class="label label--accent" data-reveal>03 · Билеты</span>
-      <h1 class="h2" data-scramble="1200">Схема зала и билеты</h1>
-      <p class="lead" data-reveal>Схема зала со сценой-шестигранником, зоны FAN ZONE / VIP / A / B / C, выбор мест, корзина, оформление и «Мои заказы» с отменой.</p>
-      <div data-reveal><a class="btn btn--outline" href="index.html">← На главную</a></div>
+    <!-- ===== 1. ЗАГОЛОВОК ===== -->
+    <section class="tk-hero">
+      <div class="wrap">
+        <div class="sec-head">
+          <span class="sec-head__num">[03]</span>
+          <span class="sec-head__title label label--white" data-scramble>Tickets</span>
+          <span class="sec-head__meta label">Solar Arena · 704 места</span>
+        </div>
+        <div class="grid tk-hero__grid">
+          <div class="tk-hero__main">
+            <span class="label label--pink" data-reveal>03 · Билеты</span>
+            <h1 class="h1 tk-hero__title" data-scramble="1200">Билеты</h1>
+            <p class="lead" data-reveal style="--d:.1s">Выберите вечер и места прямо на схеме арены. Сцена-шестигранник в центре, подиумы уходят к фан-зоне. До 8 мест в одном заказе.</p>
+          </div>
+          <ul class="tk-hero__steps" data-reveal style="--d:.15s">
+            <li><span class="led">01</span><b>Вечер</b><small>14 или 15 августа</small></li>
+            <li><span class="led">02</span><b>Места</b><small>кликните на схеме</small></li>
+            <li><span class="led">03</span><b>Заказ</b><small>имя и почта</small></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 2. ВЫБОР ВЕЧЕРА ===== -->
+    <section class="section tk-days">
+      <div class="wrap">
+        <div class="tk-tabs" role="tablist" aria-label="Вечер" id="tk-days"></div>
+      </div>
+    </section>
+
+    <!-- ===== 3. СХЕМА ЗАЛА + КОРЗИНА ===== -->
+    <section class="section tk-main">
+      <div class="wrap grid tk-main__grid">
+
+        <div class="tk-map-col">
+          <div class="tk-toolbar">
+            <div class="tk-zones" id="tk-zones" role="group" aria-label="Зоны зала"></div>
+          </div>
+
+          <div class="tk-map" id="tk-map">
+            <svg id="arena" viewBox="0 0 1000 800" role="img" aria-label="Схема Solar Arena">
+              <defs>
+                <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+                  <feGaussianBlur stdDeviation="3.2" result="b"/>
+                  <feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+                </filter>
+                <filter id="glow-soft" x="-50%" y="-50%" width="200%" height="200%">
+                  <feGaussianBlur stdDeviation="8"/>
+                </filter>
+                <linearGradient id="beam" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0" stop-color="#9D3BFF" stop-opacity=".45"/>
+                  <stop offset="1" stop-color="#9D3BFF" stop-opacity="0"/>
+                </linearGradient>
+                <radialGradient id="floor" cx=".5" cy=".46" r=".6">
+                  <stop offset="0" stop-color="#FF2D95" stop-opacity=".16"/>
+                  <stop offset=".6" stop-color="#9D3BFF" stop-opacity=".05"/>
+                  <stop offset="1" stop-color="#000" stop-opacity="0"/>
+                </radialGradient>
+              </defs>
+              <rect width="1000" height="800" fill="url(#floor)"/>
+              <g id="stage" aria-hidden="true"></g>
+              <g id="seats"></g>
+            </svg>
+
+            <div class="tk-zoom" aria-label="Масштаб">
+              <button id="zoom-in" aria-label="Приблизить" data-cursor="+">+</button>
+              <button id="zoom-out" aria-label="Отдалить" data-cursor="−">−</button>
+              <button id="zoom-reset" aria-label="Весь зал" data-cursor="ВЕСЬ ЗАЛ">⤢</button>
+            </div>
+            <div class="tk-hint label" id="tk-hint">Нажмите на зону, чтобы приблизить</div>
+            <div class="tk-tip" id="tk-tip" role="status"></div>
+          </div>
+
+          <div class="tk-legend">
+            <span><i class="st st--free"></i>Свободно</span>
+            <span><i class="st st--sel"></i>Выбрано</span>
+            <span><i class="st st--taken"></i>Занято</span>
+            <span class="tk-legend__note label" id="tk-free"></span>
+          </div>
+        </div>
+
+        <!-- Корзина -->
+        <aside class="tk-cart" id="tk-cart" aria-label="Ваш заказ">
+          <div class="tk-cart__inner">
+            <div class="tk-cart__head">
+              <span class="label label--pink">Ваш заказ</span>
+              <span class="label label--white" id="cart-day">14.08 · Sunset Stage</span>
+            </div>
+
+            <div class="tk-auto">
+              <span class="label">Подобрать лучшие места</span>
+              <div class="tk-auto__row">
+                <select id="auto-zone" aria-label="Зона"></select>
+                <div class="tk-qty" role="group" aria-label="Количество">
+                  <button data-q="-1" aria-label="Меньше">−</button>
+                  <span class="led" id="auto-qty">2</span>
+                  <button data-q="1" aria-label="Больше">+</button>
+                </div>
+              </div>
+              <button class="btn btn--sm" id="auto-pick" data-cursor="ПОДОБРАТЬ">Подобрать <span class="btn__icon"></span></button>
+            </div>
+
+            <ul class="tk-cart__list" id="cart-list"></ul>
+
+            <div class="tk-cart__total">
+              <span class="label">Итого</span>
+              <b class="led" id="cart-total">0 ₽</b>
+            </div>
+
+            <form class="tk-form" id="tk-form" novalidate>
+              <label class="tk-field">
+                <span class="label">Имя</span>
+                <input type="text" name="name" id="f-name" autocomplete="name" placeholder="Как к вам обращаться" required>
+              </label>
+              <label class="tk-field">
+                <span class="label">Почта</span>
+                <input type="email" name="email" id="f-email" autocomplete="email" placeholder="name@mail.ru" required>
+              </label>
+              <p class="tk-form__err label" id="f-err" aria-live="polite"></p>
+              <button class="btn btn--pink tk-form__submit" type="submit" id="f-submit" data-cursor-off disabled>Оформить заказ <span>↗</span></button>
+              <p class="tk-form__note">Учебный проект: оплата не списывается, заказ сохраняется в браузере.</p>
+            </form>
+
+            <div class="tk-done" id="tk-done" hidden></div>
+          </div>
+        </aside>
+
+      </div>
+    </section>
+
+    <!-- ===== 4. МОИ ЗАКАЗЫ ===== -->
+    <section class="section tk-orders" id="orders">
+      <div class="wrap">
+        <div class="sec-head">
+          <span class="sec-head__num">[03.1]</span>
+          <span class="sec-head__title label label--white" data-scramble>Мои заказы</span>
+          <span class="sec-head__meta label" id="orders-meta">0 активных</span>
+        </div>
+        <div class="tk-orders__top">
+          <h2 class="h2" data-scramble="1000">Мои заказы</h2>
+          <div class="tk-chips tk-orders__filter" role="group" aria-label="Показать заказы">
+            <button class="chip is-active" data-of="active" aria-pressed="true">Активные</button>
+            <button class="chip" data-of="all" aria-pressed="false">Все</button>
+          </div>
+        </div>
+        <div class="tk-orders__list" id="orders-list"></div>
+      </div>
     </section>
 
     <footer id="sa-footer"></footer>
