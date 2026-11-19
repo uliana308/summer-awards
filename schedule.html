@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Расписание — SUMMERAWARDS 2027</title>
+  <meta name="description" content="Расписание SUMMERAWARDS 2027: кто и когда выходит на сцену 14 и 15 августа в Solar Arena.">
   <link rel="stylesheet" href="css/common.css">
   <link rel="stylesheet" href="css/schedule.css">
 </head>
@@ -16,12 +17,111 @@
 
   <main class="page" id="schedule">
 
-    <!-- ЗАГОТОВКА. Ветка: feature/schedule. Замените этот блок своей страницей. -->
-    <section class="stub">
-      <span class="label label--accent" data-reveal>02 · Расписание</span>
-      <h1 class="h2" data-scramble="1200">Расписание концерта</h1>
-      <p class="lead" data-reveal>Вкладки «День 1 · Sunset Stage» / «День 2 · Night Stage», таймлайн выступлений и вручений, фильтр по артисту.</p>
-      <div data-reveal><a class="btn btn--outline" href="index.html">← На главную</a></div>
+    <!-- ===== 1. ЗАГОЛОВОК ===== -->
+    <section class="sch-hero">
+      <div class="wrap">
+        <div class="sec-head">
+          <span class="sec-head__num">[02]</span>
+          <span class="sec-head__title label label--white" data-scramble>Timetable</span>
+          <span class="sec-head__meta label">14—15.08 · Solar Arena</span>
+        </div>
+
+        <div class="grid sch-hero__grid">
+          <div class="sch-hero__main">
+            <span class="label label--pink" data-reveal>02 · Расписание</span>
+            <h1 class="h1 sch-hero__title" data-scramble="1200">Расписание</h1>
+            <p class="lead" data-reveal style="--d:.1s">Два вечера, восемь групп и восемь номинаций. Выберите день, отметьте любимую группу, и мы покажем её выход и номинации.</p>
+          </div>
+
+          <div class="sch-hero__count cell corners" data-reveal style="--d:.15s" aria-live="polite">
+            <span class="label label--pink" id="cd-label">До начала дня 1</span>
+            <div class="sch-cd led" aria-label="Обратный отсчёт">
+              <b id="cd-d">000</b><i>:</i><b id="cd-h">00</b><i>:</i><b id="cd-m">00</b><i>:</i><b id="cd-s">00</b>
+            </div>
+            <div class="sch-cd__labels"><span>дн</span><span>ч</span><span>мин</span><span>сек</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 2. ВКЛАДКИ ДНЕЙ ===== -->
+    <section class="section sch-days">
+      <div class="wrap">
+        <div class="sch-tabs" role="tablist" aria-label="День фестиваля" id="day-tabs"></div>
+      </div>
+    </section>
+
+    <!-- ===== 3. ФИЛЬТРЫ ===== -->
+    <section class="section sch-filter">
+      <div class="wrap">
+        <div class="sch-filter__row">
+          <span class="label sch-filter__name">Артист</span>
+          <div class="sch-chips" id="artist-chips" role="group" aria-label="Фильтр по артисту"></div>
+        </div>
+        <div class="sch-filter__row">
+          <span class="label sch-filter__name">Показать</span>
+          <div class="sch-chips" id="type-chips" role="group" aria-label="Тип события">
+            <button class="chip is-active" data-type="all" aria-pressed="true">Всё</button>
+            <button class="chip" data-type="show" aria-pressed="false">Выступления</button>
+            <button class="chip" data-type="award" aria-pressed="false">Вручения</button>
+          </div>
+          <p class="label sch-filter__result" id="filter-result" aria-live="polite"></p>
+          <button class="sch-reset label" id="filter-reset" hidden>Сбросить фильтр ×</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 4. ТАЙМЛАЙН ===== -->
+    <section class="section sch-body">
+      <div class="wrap grid sch-body__grid">
+
+        <aside class="sch-side" aria-label="Сводка вечера">
+          <div class="sch-side__inner">
+            <div class="sch-side__block">
+              <span class="label label--pink" id="side-date">14 августа · суббота</span>
+              <h2 class="h3 sch-side__stage" id="side-stage">Sunset Stage</h2>
+              <p class="sch-side__desc" id="side-desc"></p>
+            </div>
+
+            <dl class="sch-side__stats" id="side-stats"></dl>
+
+            <div class="sch-side__block">
+              <div class="sch-side__row">
+                <span class="label">Шкала вечера</span>
+                <span class="label label--white" id="side-range">17:00—22:15</span>
+              </div>
+              <div class="sch-bar" id="mini-bar" aria-hidden="true"></div>
+              <div class="sch-bar__legend">
+                <span><i class="lg lg--show"></i>Выступление</span>
+                <span><i class="lg lg--award"></i>Вручение</span>
+                <span><i class="lg lg--special"></i>Шоу</span>
+              </div>
+            </div>
+
+            <div class="sch-side__block sch-weather" id="weather" aria-live="polite">
+              <div class="sch-side__row">
+                <span class="label">Погода у арены</span>
+                <span class="label">Open-Meteo</span>
+              </div>
+              <div class="sch-weather__body" id="weather-body"></div>
+            </div>
+
+            <div class="sch-side__block sch-mine" id="my-tickets"></div>
+
+            <div class="sch-side__actions">
+              <a class="btn btn--pink" id="buy-day" href="tickets.html" data-cursor-off>Купить билет на этот день <span>↗</span></a>
+              <button class="btn" id="ics-day" data-cursor="СКАЧАТЬ">Добавить в календарь <span class="btn__icon"></span></button>
+            </div>
+          </div>
+        </aside>
+
+        <div class="sch-timeline" id="timeline">
+          <div class="sch-timeline__rail" aria-hidden="true"><span id="rail-fill"></span></div>
+          <ol class="sch-list" id="sch-list"></ol>
+          <div class="sch-empty" id="sch-empty" hidden></div>
+        </div>
+
+      </div>
     </section>
 
     <footer id="sa-footer"></footer>
